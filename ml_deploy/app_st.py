@@ -1,25 +1,49 @@
 import streamlit as st
 import numpy as np
 import pickle
+import os
 # 모델 로드 함수
+
+#현재 파일의 디렉토리 경로 설정
+#./ : 현재 디렉토리
+base_path = os.path.dirname(__file__)
+
+#모델 로드 함수
 @st.cache_resource # 자원 캐싱 기능
 def load_model():
-    with open('models/iris_model_lr.pkl', 'rb') as f:
+    model_path = os.path.join(base_path, "models", "iris_model_rfc.pkl")
+    # with open('models/iris_model_lr.pkl', 'rb') as f:
+    with open(model_path, 'rb') as f:
         model = pickle.load(f)
     return model
 model = load_model()
 
 # 클래스별 이미지 경로 설정
+# 윈도우에서만 됨.
+# def get_image_path(prediction):
+#     if prediction == 0:
+#         return "static/setosa.jpg" # setosa 이미지 경로
+#     elif prediction == 1:
+#         return "static/versicolor.jpg" # versicolor 이미지 경로
+#     else:
+#         return "static/virginica.png" # virginica 이미지 경로
+# 클래스별 이미지 경로 설정
+# 모든 os에서 작동하도록 수정
 def get_image_path(prediction):
     if prediction == 0:
-        return "static/setosa.jpg" # setosa 이미지 경로
+        return os.path.join(base_path,"static", "setosa.jpg") # setosa 이미지 경로
+         # setosa 이미지 경로
+         # setosa 이미지 경로
     elif prediction == 1:
-        return "static/versicolor.jpg" # versicolor 이미지 경로
+        return os.path.join(base_path,"static, versicolor.jpg") # versicolor 이미지 경로
     else:
-        return "static/virginica.png" # virginica 이미지 경로
+        return os.path.join(base_path,"static, virginica.jpg") # virginica 이미지 경로
     # Streamlit 앱 구성
 st.title("Iris 품종 예측")
 st.write("꽃받침 길이, 너비, 꽃잎 길이, 너비를 입력하여 품종을 예측해보세요.")
+
+#이미지 로딩
+img_path = os.path.join(base_path, "static", "flower1.jpg")
 # 사용자 입력 받기
 sepal_length = st.number_input("꽃받침 길이",
 min_value=0.0, max_value=10.0, value=5.0)
